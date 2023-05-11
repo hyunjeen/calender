@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      .calender_wrap {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .calender {
+        width: 500px;
+        height: 500px;
+        border: 1px solid #000;
+      }
+      .calender_title {
+        background-color: #000;
+        text-align: center;
+        color: #fff;
+      }
+      .calender_body {
+        background-color: #fff;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calender_wrap">
+      <table class="calender">
+        <thead class="calender_title">
+          <tr>
+            <td>Sun</td>
+            <td>Mon</td>
+            <td>Tue</td>
+            <td>Wed</td>
+            <td>Thu</td>
+            <td>Fri</td>
+            <td>Sat</td>
+          </tr>
+        </thead>
+        <tbody class="calender_body"></tbody>
+      </table>
+    </div>
+
+    <script>
+      const calenderBody = document.querySelector(".calender_body");
+      const currentDateTime = getDateTime(2019, 2, 1); // 3월
+
+      const Fragment = document.createDocumentFragment()
+      let trElements = document.createElement("tr");
+      //  빈 요일을 채워주는 로직
+      for (let i = 0; i < calcBlankDay(currentDateTime); i++) {
+        trElements.append(document.createElement("td"));
+      }
+
+      // 1일부터 마지막 날짜까지 순회
+      for (let i = 1; i <= lastDayOfMonth(currentDateTime); i++) {
+        if(trElements.children.length === 7) {
+          Fragment.append(trElements)
+          trElements = document.createElement("tr");
+        }
+        const tdElement = document.createElement("td");
+        tdElement.textContent = i;
+        trElements.append(tdElement)
+      }
+      Fragment.append(trElements)
+      calenderBody.append(Fragment)
+
+      /**
+       * @param {Date} dateTime
+       * @returns {number}
+       */
+
+
+      function calcBlankDay(dateTime) {
+        const firstDay = firstDayOfWeek(dateTime)
+        const blankDay = firstDay;
+        return blankDay;
+      }
+
+      /**
+       * @param {Date} dateTime
+       * @returns {number}
+       */
+      function firstDayOfWeek(dateTime) {
+        return new Date(
+          dateTime.getFullYear(),
+          dateTime.getMonth(),
+          1,
+        ).getDay();
+      }
+
+      /**
+       * @param {Date} dateTime
+       * @returns {number}
+       */
+      function lastDayOfMonth(dateTime) {
+        const nextMonth = dateTime.getMonth() + 1;
+        return new Date(dateTime.getFullYear(), nextMonth, 0).getDate();
+      }
+      /**
+       * @param {number} year
+       * @param {number} month
+       * @param {number} day
+       * @returns {Date}
+       */
+      function getDateTime(year, month, day) {
+        if (year < 0 || month < 0 || day < 0) {
+          return;
+        }
+        return new Date(year, month - 1, day);
+      }
+    </script>
+  </body>
+</html>
